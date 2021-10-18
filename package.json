@@ -2,7 +2,6 @@
   "name": "nodeJS-2021Q3-BY-GM",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "task1": "nodemon ./src/task1.ts"
