@@ -1,39 +1,35 @@
-import { User } from './user.model';
+import { BaseUser, User } from './user.model';
 import { v4 as uuidv4 } from 'uuid';
 import { users } from './data';
-import { Router, Request, Response } from 'express';
-
+import { Router, Response } from 'express';
+import { Request } from '../typings';
 export const router = Router();
 
-interface UserRequest extends Request {
-	user?: User;
-}
-
-router.param('id', (req: UserRequest, _, next, id) => {
+router.param('id', (req: Request, _, next, id) => {
 	req.user = users.find((u) => u.id === id);
 	next();
 });
 
 router
 	.route('/:id')
-	.get((req: UserRequest, res: Response) => {
+	.get((req: Request<{ id: string }, User, {}, {}, Record<string, BaseUser>>, res: Response) => {
 		if (req.user) {
 			res.json(req.user);
 		} else {
 			res.status(404).json({ message: `User with id ${req.params.id} is not found` });
 		}
 	})
-	.put((req: UserRequest, res) => {
+	.put((req: Request<{ id: string }, User, BaseUser, {}, Record<string, BaseUser>>, res) => {
 		if (req.user) {
 			const user = req.user;
-			const { login, password, age } = req.params;
-			user.updateDetails(login, password, parseInt(age));
-			res.status(200).send();
+			const { login, password, age } = req.body;
+			user.updateDetails(login, password, age);
+			res.status(200).json(user);
 		} else {
 			res.status(404).json({ message: `User with id ${req.params.id} is not found` });
 		}
 	})
-	.delete((req: UserRequest, res) => {
+	.delete((req: Request<{ id: string }, {}, {}, {}, Record<string, BaseUser>>, res) => {
 		if (req.user) {
 			const user = req.user;
 			user.markForDeletion();
@@ -44,15 +40,14 @@ router
 	});
 
 router.get(
-	'/auto-suggest',
-	(req: Request<{}, User[], User[], { loginSubstring: string; limit: number }>, res: Response<User[]>) => {
+	'/',
+	(req: Request<{}, User[], BaseUser[], { loginSubstring: string; limit: number }>, res: Response<User[]>) => {
 		const { limit, loginSubstring } = req.query;
-
 		res.json(getAutoSuggestUsers(loginSubstring, limit));
 	}
 );
 
-router.post('/', (req: Request<{}, User, User>, res: Response<User>) => {
+router.post('/', (req: Request<{}, User, BaseUser>, res: Response<User>) => {
 	const user = new User(uuidv4(), req.body.login, req.body.password, req.body.age);
 
 	users.push(user);

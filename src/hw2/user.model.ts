@@ -1,3 +1,9 @@
+export type BaseUser = {
+	login: string;
+	password: string;
+	age: number;
+};
+
 export class User {
 	id: string;
 	login: string;
@@ -13,6 +19,7 @@ export class User {
 	}
 
 	updateDetails(login: string, password: string, age: number) {
+		console.log(login, password, age);
 		this.login = login || this.login;
 		this.password = password || this.password;
 		this.age = age || this.age;
