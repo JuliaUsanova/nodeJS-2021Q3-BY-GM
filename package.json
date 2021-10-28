@@ -6,7 +6,7 @@
     "build": "tsc",
     "homework1:1": "nodemon src/hw1/task1.ts",
     "homework1:2": "nodemon src/hw1/task2.ts",
-    "homework2:1": "nodemon src/hw2/task1.ts"
+    "homework2": "nodemon src/hw2/main.ts"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,8 @@
   "dependencies": {
     "csvtojson": "^2.0.10",
     "express": "^4.17.1",
+    "express-joi-validation": "^5.0.0",
+    "joi": "^17.4.2",
     "uuid": "^8.3.2"
   }
 }
