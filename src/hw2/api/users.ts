@@ -1,10 +1,10 @@
-import { BaseUser, User } from './user.model';
+import { BaseUser, User } from '../models/user.model';
 import { v4 as uuidv4 } from 'uuid';
-import { users } from './data';
+import { users } from '../data';
 import { Router, Response } from 'express';
-import { Request } from '../typings';
+import { Request } from '../../typings';
 import { ValidatedRequest } from 'express-joi-validation';
-import { baseUserBodySchema, BaseUserSchema, validator } from './validators';
+import { baseUserBodySchema, BaseUserSchema, validator } from '../validators';
 export const router = Router();
 
 router.param('id', (req: Request, _, next, id) => {

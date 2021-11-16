@@ -1,13 +1,14 @@
 import { Client } from 'pg';
 import { readFileSync } from 'fs';
 import path from 'path';
+import config from '../config';
 
 const connectionConfig = {
-	user: 'postgres',
-	database: 'postgres',
-	password: 'password',
-	port: 5432,
-	host: 'localhost'
+	user: config.db.user,
+	database: config.db.name,
+	password: config.db.password,
+	port: config.db.port,
+	host: config.db.host
 };
 const client = new Client(connectionConfig);
 

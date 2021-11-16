@@ -12,7 +12,7 @@ INSERT INTO users(login, password, age)
 SELECT
   'user_' || seq || (RANDOM() * seq) AS login,
   md5(RANDOM()::TEXT) AS password,
-  seq + (RANDOM() * 10)::INT AS age
+  (seq + 4) AS age
 FROM GENERATE_SERIES(1, 10) seq;
 
 SELECT * FROM users;
