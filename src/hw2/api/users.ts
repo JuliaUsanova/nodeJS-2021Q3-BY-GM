@@ -82,18 +82,13 @@ router.post(
 );
 
 async function getAutoSuggestUsers(loginSubstring: string, limit: number): Promise<UserAttributes[]> {
-	const users = await User.findAll({
+	return await User.findAll({
 		where: {
 			login: {
 				[Op.substring]: loginSubstring
 			}
 		},
+		order: ['login', 'DESC'],
 		limit
-	});
-	return users.sort((u1, u2) => {
-		if (u1.login < u2.login) {
-			return 1;
-		}
-		return -1;
 	});
 }
