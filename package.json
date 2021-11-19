@@ -6,7 +6,7 @@
     "build": "tsc",
     "homework1:1": "nodemon src/hw1/task1.ts",
     "homework1:2": "nodemon src/hw1/task2.ts",
-    "homework2": "nodemon src/hw2/app.ts",
+    "serve": "nodemon src/hw2/app.ts",
     "generate": "nodemon src/hw2/jobs/generate-test-data.ts"
   },
   "repository": {
@@ -22,8 +22,9 @@
   "homepage": "https://github.com/JuliaUsanova/nodeJS-2021Q3-BY-GM#readme",
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/node": "^16.11.1",
+    "@types/node": "^16.11.7",
     "@types/uuid": "^8.3.1",
+    "@types/validator": "^13.7.0",
     "nodemon": "^2.0.13",
     "prettier": "^2.4.1",
     "ts-node": "^10.3.0",
@@ -37,7 +38,10 @@
     "express-joi-validation": "^5.0.0",
     "joi": "^17.4.2",
     "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "reflect-metadata": "^0.1.13",
     "sequelize": "^6.9.0",
+    "sequelize-typescript": "^2.1.1",
     "uuid": "^8.3.2"
   }
 }
