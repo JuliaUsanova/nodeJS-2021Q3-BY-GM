@@ -9,12 +9,7 @@ import { Op } from 'sequelize';
 export const router = Router();
 
 router.param('id', async (req: Request, _, next, id) => {
-	req.user =
-		(await User.findOne({
-			where: {
-				id: id
-			}
-		})) ?? undefined;
+	req.user = (await User.findByPk(id)) ?? undefined;
 
 	next();
 });
