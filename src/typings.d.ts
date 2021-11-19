@@ -1,4 +1,4 @@
-import { User } from './hw2/models/user.model';
+import { User } from './models/user.model';
 import * as core from 'express-serve-static-core';
 
 export interface Request<

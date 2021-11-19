@@ -1,6 +1,6 @@
 import { User } from '../models/user.model';
 import { Response, Router } from 'express';
-import { Request } from '../../typings';
+import { Request } from '../typings';
 import { ValidatedRequest } from 'express-joi-validation';
 import { baseUserBodySchema, BaseUserSchema, validator } from '../validators';
 import { BaseUserAttributes, UserAttributes } from '../types/user';

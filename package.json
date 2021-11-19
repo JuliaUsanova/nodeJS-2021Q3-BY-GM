@@ -4,10 +4,8 @@
   "description": "",
   "scripts": {
     "build": "tsc",
-    "homework1:1": "nodemon src/hw1/task1.ts",
-    "homework1:2": "nodemon src/hw1/task2.ts",
-    "serve": "nodemon src/hw2/app.ts",
-    "generate": "nodemon src/hw2/jobs/generate-test-data.ts"
+    "serve": "nodemon src/app.ts",
+    "generate": "nodemon src/jobs/generate-test-data.ts"
   },
   "repository": {
     "type": "git",
