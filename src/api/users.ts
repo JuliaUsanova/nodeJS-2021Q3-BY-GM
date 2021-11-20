@@ -69,10 +69,20 @@ router.get(
 router.post(
 	'/',
 	validator.body(baseUserBodySchema),
-	async (req: ValidatedRequest<BaseUserSchema>, res: Response<User>) => {
-		const user = await User.create({ login: req.body.login, password: req.body.password, age: req.body.age });
+	async (req: ValidatedRequest<BaseUserSchema>, res: Response<User | string>) => {
+		let user: User | undefined;
+		try {
+			user = await User.create({ login: req.body.login, password: req.body.password, age: req.body.age });
+		} catch (e) {
+			console.log(e)
+		}
 
-		res.json(user);
+		if (user) {
+			res.json(user);
+		} else {
+			res.status(500).send('Internal server error');
+		}
+
 	}
 );
 

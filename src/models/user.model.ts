@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, AllowNull, Unique, PrimaryKey } from 'sequelize-typescript';
+import { Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { UserAttributes } from '../types/user';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,13 +7,12 @@ interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'isDele
 
 @Table
 export class User extends Model<User, UserCreationAttributes> {
-	@Column(DataType.UUIDV4)
-	@AllowNull(false)
 	@PrimaryKey
+	@Column(DataType.UUIDV4)
 	id = uuidv4();
 
-	@Column(DataType.STRING)
 	@Unique(true)
+	@Column(DataType.STRING)
 	login = '';
 
 	@Column(DataType.STRING)

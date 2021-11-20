@@ -16,8 +16,9 @@ export const sequelize = new Sequelize({
 export default async () => {
 	try {
 		await sequelize.authenticate();
-		console.log('Connection has been established successfully.');
+		console.log('Connection to DB has been established successfully.');
 		dbDriver.setInstance(sequelize);
+		// await User.sync({ force: true });
 	} catch (error) {
 		console.error('Unable to connect to the database:', error);
 		return null;
