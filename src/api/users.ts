@@ -74,7 +74,7 @@ router.post(
 		try {
 			user = await User.create({ login: req.body.login, password: req.body.password, age: req.body.age });
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 
 		if (user) {
@@ -82,7 +82,6 @@ router.post(
 		} else {
 			res.status(500).send('Internal server error');
 		}
-
 	}
 );
 
