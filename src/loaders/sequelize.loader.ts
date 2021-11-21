@@ -1,4 +1,4 @@
-import config from '../config';
+import { config } from '../config';
 import { Sequelize } from 'sequelize-typescript';
 import { User } from '../models/user.model';
 import dbDriver from '../services/db-driver.service';

@@ -9,7 +9,7 @@ if (envFound.error) {
 	throw new Error("⚠️  Couldn't find .env file  ⚠️");
 }
 
-export default {
+export const config = {
 	port: process.env.PORT ? parseInt(process.env.PORT) : 3030,
 	db: {
 		user: process.env['DB_USER'],

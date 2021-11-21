@@ -2,13 +2,14 @@ import { User } from '../models/user.model';
 import { Response, Router } from 'express';
 import { Request } from '../typings';
 import { ValidatedRequest } from 'express-joi-validation';
-import { baseUserBodySchema, BaseUserSchema, validator } from '../validators';
+import { asyncUserBodySchema, baseUserBodySchema, BaseUserSchema, validator } from '../validators';
 import { BaseUserAttributes, UserAttributes } from '../types/user';
 import { Op } from 'sequelize';
 
 export const router = Router();
 
 router.param('id', async (req: Request, _, next, id) => {
+	console.log('>>>>>> entered param');
 	req.user = (await User.findByPk(id)) ?? undefined;
 
 	next();
@@ -68,10 +69,25 @@ router.get(
 
 router.post(
 	'/',
-	validator.body(baseUserBodySchema),
+	// validator.body(baseUserBodySchema),
+	(_req: Request, _, next) =>
+		asyncUserBodySchema
+			.validateAsync({ login: 'user123' })
+			.then(() => next())
+			.catch((e) => console.log(e)),
+	// (req: ValidatedRequest<BaseUserSchema>) => asyncUserBodySchema(req.body),
 	async (req: ValidatedRequest<BaseUserSchema>, res: Response<User | string>) => {
 		let user: User | undefined;
 		try {
+			console.log(
+				'Trying to create user with params: ',
+				'login: ',
+				req.body.login,
+				'password: ',
+				req.body.password,
+				'age: ',
+				req.body.age
+			);
 			user = await User.create({ login: req.body.login, password: req.body.password, age: req.body.age });
 		} catch (e) {
 			console.log(e);
