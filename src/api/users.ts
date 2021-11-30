@@ -76,7 +76,8 @@ router.post('/', newUserValidator, async (req: ValidatedRequest<BaseUserSchema>,
 		res.json(user);
 	} catch (e) {
 		console.log(e);
-		res.status(500).send('Internal server error');
+		// @ts-ignore
+		res.status(404).send({ error: e });
 	}
 });
 
