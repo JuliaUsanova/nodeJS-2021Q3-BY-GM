@@ -2,9 +2,10 @@ import { User } from '../models/user.model';
 import { Response, Router } from 'express';
 import { Request } from '../typings';
 import { ValidatedRequest } from 'express-joi-validation';
-import { asyncUserBodySchema, baseUserBodySchema, BaseUserSchema, validator } from '../validators';
 import { BaseUserAttributes, UserAttributes } from '../types/user';
 import { Op } from 'sequelize';
+import { newUserValidator, userValidator } from '../validators';
+import { baseUserBodySchema, BaseUserSchema } from '../validators/schemas';
 
 export const router = Router();
 
@@ -25,7 +26,7 @@ router
 		}
 	})
 	.put(
-		validator.body(baseUserBodySchema),
+		userValidator.body(baseUserBodySchema),
 		async (
 			req: Request<{ id: string }, UserAttributes, BaseUserAttributes, {}, Record<string, BaseUserAttributes>>,
 			res
@@ -67,39 +68,17 @@ router.get(
 	}
 );
 
-router.post(
-	'/',
-	// validator.body(baseUserBodySchema),
-	(_req: Request, _, next) =>
-		asyncUserBodySchema
-			.validateAsync({ login: 'user123' })
-			.then(() => next())
-			.catch((e) => console.log(e)),
-	// (req: ValidatedRequest<BaseUserSchema>) => asyncUserBodySchema(req.body),
-	async (req: ValidatedRequest<BaseUserSchema>, res: Response<User | string>) => {
-		let user: User | undefined;
-		try {
-			console.log(
-				'Trying to create user with params: ',
-				'login: ',
-				req.body.login,
-				'password: ',
-				req.body.password,
-				'age: ',
-				req.body.age
-			);
-			user = await User.create({ login: req.body.login, password: req.body.password, age: req.body.age });
-		} catch (e) {
-			console.log(e);
-		}
+router.post('/', newUserValidator, async (req: ValidatedRequest<BaseUserSchema>, res: Response<User | string>) => {
+	let user: User | undefined;
+	try {
+		user = await User.create({ login: req.body.login, password: req.body.password, age: req.body.age });
 
-		if (user) {
-			res.json(user);
-		} else {
-			res.status(500).send('Internal server error');
-		}
+		res.json(user);
+	} catch (e) {
+		console.log(e);
+		res.status(500).send('Internal server error');
 	}
-);
+});
 
 async function getAutoSuggestUsers(loginSubstring: string, limit: number): Promise<UserAttributes[]> {
 	return await User.findAll({

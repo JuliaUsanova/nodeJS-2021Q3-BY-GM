@@ -8,7 +8,7 @@ interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'isDele
 @Table
 export class User extends Model<User, UserCreationAttributes> {
 	@PrimaryKey
-	@Column(DataType.UUIDV4)
+	@Column(DataType.STRING)
 	id = uuidv4();
 
 	@Unique(true)

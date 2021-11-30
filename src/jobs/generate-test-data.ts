@@ -1,7 +1,7 @@
 import { Client } from 'pg';
 import { readFileSync } from 'fs';
 import path from 'path';
-import config from '../config';
+import { config } from '../config';
 
 const connectionConfig = {
 	user: config.db.user,
@@ -17,8 +17,8 @@ const connect = async () => {
 
 	try {
 		await client.connect();
-		const result = await client.query(script);
-		console.log('user data generated successfully ', result);
+		await client.query(script);
+		console.log('user data generated successfully');
 		await client.end();
 	} catch (e) {
 		console.error('unable to generate users ', e);
