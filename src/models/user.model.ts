@@ -13,13 +13,13 @@ export class User extends Model<User, UserCreationAttributes> {
 
 	@Unique(true)
 	@Column(DataType.STRING)
-	login = '';
+	login!: string;
 
 	@Column(DataType.STRING)
-	password = '';
+	password!: string;
 
 	@Column(DataType.INTEGER)
-	age = 0;
+	age!: number;
 
 	@Column(DataType.BOOLEAN)
 	isDeleted = false;

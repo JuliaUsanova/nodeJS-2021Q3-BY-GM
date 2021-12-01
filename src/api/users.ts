@@ -48,9 +48,7 @@ router
 		if (req.user) {
 			const user = req.user;
 
-			// TODO: DO WE NEED TO ONLY MARK USER FOR DELETION?
 			await user.destroy();
-
 			res.status(200).send();
 		} else {
 			res.status(404).json({ message: `User with id ${req.params.id} is not found` });

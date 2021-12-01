@@ -6,7 +6,7 @@ import sequelizeLoader from './sequelize.loader';
 export async function startServer(PORT: number) {
 	const app = express();
 
-	await expressLoader({ app });
+	expressLoader({ app });
 	await errorMiddlewareLoader({ app });
 	await sequelizeLoader();
 
