@@ -23,6 +23,7 @@ export const config = {
 	 * API configs
 	 */
 	api: {
-		prefix: '/users'
+		usersPrefix: '/users',
+		groupsPrefix: '/groups'
 	}
 };

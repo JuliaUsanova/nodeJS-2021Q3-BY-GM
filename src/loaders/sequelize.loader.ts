@@ -3,6 +3,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { User } from '../models/user.model';
 import dbDriver from '../services/db-driver.service';
 import { Group } from '../models/group.model';
+import { UserGroup } from '../models/user-group';
 
 export const sequelize = new Sequelize({
 	database: config.db.name,
@@ -11,7 +12,7 @@ export const sequelize = new Sequelize({
 	host: config.db.host,
 	dialect: 'postgres',
 	port: config.db.port,
-	models: [User, Group]
+	models: [User, Group, UserGroup]
 });
 
 export default async () => {

@@ -1,6 +1,6 @@
 import { User } from '../models/user.model';
 import { Response, Router } from 'express';
-import { Request } from '../typings';
+import { UserRequest as Request } from '../typings';
 import { ValidatedRequest } from 'express-joi-validation';
 import { BaseUserAttributes, IUserAttributes } from '../types/user';
 import { Op } from 'sequelize';
@@ -10,7 +10,7 @@ import { baseUserBodySchema, BaseUserSchema } from '../validators/schemas';
 export const router = Router();
 
 router.param('id', async (req: Request, _, next, id) => {
-	console.log('>>>>>> entered param');
+	console.log('>>>>>> entered user id param');
 	req.user = (await User.findByPk(id)) ?? undefined;
 
 	next();

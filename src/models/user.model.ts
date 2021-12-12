@@ -1,7 +1,9 @@
-import { Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { IUserAttributes } from '../types/user';
 import { v4 as uuidv4 } from 'uuid';
+import { Group } from './group.model';
+import { UserGroup } from './user-group';
 
 interface IUserCreationAttributes extends Optional<IUserAttributes, 'id' | 'isDeleted'> {}
 
@@ -24,14 +26,12 @@ export class User extends Model<User, IUserCreationAttributes> {
 	@Column(DataType.BOOLEAN)
 	isDeleted = false;
 
+	@BelongsToMany(() => Group, () => UserGroup)
+	groups!: Array<Group & { UserGroup: UserGroup }>;
+
 	updateDetails(login: string, password: string, age: number) {
-		console.log(login, password, age);
 		this.login = login ?? this.login;
 		this.password = password ?? this.password;
 		this.age = age ?? this.age;
-	}
-
-	markForDeletion() {
-		this.isDeleted = true;
 	}
 }

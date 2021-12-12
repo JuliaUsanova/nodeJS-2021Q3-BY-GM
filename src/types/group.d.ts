@@ -5,3 +5,5 @@ export interface IGroup {
 	name: string;
 	permissions: Array<Permission>;
 }
+
+export type IGroupBaseAttributes = Omit<IGroup, 'id'>;

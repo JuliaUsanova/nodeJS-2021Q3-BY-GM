@@ -1,8 +1,11 @@
-import { IGroup } from '../types/group';
-import { Column, DataType, Model, PrimaryKey, Unique } from 'sequelize-typescript';
+import { IGroup, IGroupBaseAttributes, Permission } from '../types/group';
+import { BelongsToMany, Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 import { v4 as uuidv4 } from 'uuid';
+import { User } from './user.model';
+import { UserGroup } from './user-group';
 
-export class Group extends Model<IGroup> {
+@Table
+export class Group extends Model<IGroup, IGroupBaseAttributes> {
 	@PrimaryKey
 	@Column(DataType.STRING)
 	id = uuidv4();
@@ -12,5 +15,13 @@ export class Group extends Model<IGroup> {
 	name!: string;
 
 	@Column(DataType.ARRAY(DataType.STRING))
-	permissions!: [];
+	permissions!: Permission[];
+
+	@BelongsToMany(() => User, () => UserGroup)
+	users!: Array<User & { UserGroup: UserGroup }>;
+
+	updateDetails(name: string, permissions: Permission[]) {
+		this.name = name ?? this.name;
+		this.permissions = permissions && permissions.length ? permissions : this.permissions;
+	}
 }
