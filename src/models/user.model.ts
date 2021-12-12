@@ -1,12 +1,12 @@
 import { Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
-import { UserAttributes } from '../types/user';
+import { IUserAttributes } from '../types/user';
 import { v4 as uuidv4 } from 'uuid';
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'isDeleted'> {}
+interface IUserCreationAttributes extends Optional<IUserAttributes, 'id' | 'isDeleted'> {}
 
 @Table
-export class User extends Model<User, UserCreationAttributes> {
+export class User extends Model<User, IUserCreationAttributes> {
 	@PrimaryKey
 	@Column(DataType.STRING)
 	id = uuidv4();

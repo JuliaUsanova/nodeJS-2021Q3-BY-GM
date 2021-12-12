@@ -2,7 +2,7 @@ import { User } from '../models/user.model';
 import { Response, Router } from 'express';
 import { Request } from '../typings';
 import { ValidatedRequest } from 'express-joi-validation';
-import { BaseUserAttributes, UserAttributes } from '../types/user';
+import { BaseUserAttributes, IUserAttributes } from '../types/user';
 import { Op } from 'sequelize';
 import { newUserValidator, userValidator } from '../validators';
 import { baseUserBodySchema, BaseUserSchema } from '../validators/schemas';
@@ -18,7 +18,7 @@ router.param('id', async (req: Request, _, next, id) => {
 
 router
 	.route('/:id')
-	.get((req: Request<{ id: string }, UserAttributes, {}, {}, Record<string, BaseUserAttributes>>, res: Response) => {
+	.get((req: Request<{ id: string }, IUserAttributes, {}, {}, Record<string, BaseUserAttributes>>, res: Response) => {
 		if (req.user) {
 			res.json(req.user);
 		} else {
@@ -28,7 +28,7 @@ router
 	.put(
 		userValidator.body(baseUserBodySchema),
 		async (
-			req: Request<{ id: string }, UserAttributes, BaseUserAttributes, {}, Record<string, BaseUserAttributes>>,
+			req: Request<{ id: string }, IUserAttributes, BaseUserAttributes, {}, Record<string, BaseUserAttributes>>,
 			res
 		) => {
 			if (req.user) {
@@ -58,8 +58,8 @@ router
 router.get(
 	'/',
 	async (
-		req: Request<{}, UserAttributes[], BaseUserAttributes[], { loginSubstring: string; limit: number }>,
-		res: Response<UserAttributes[]>
+		req: Request<{}, IUserAttributes[], BaseUserAttributes[], { loginSubstring: string; limit: number }>,
+		res: Response<IUserAttributes[]>
 	) => {
 		const { limit, loginSubstring } = req.query;
 		res.json(await getAutoSuggestUsers(loginSubstring, limit));
@@ -79,7 +79,7 @@ router.post('/', newUserValidator, async (req: ValidatedRequest<BaseUserSchema>,
 	}
 });
 
-async function getAutoSuggestUsers(loginSubstring: string, limit: number): Promise<UserAttributes[]> {
+async function getAutoSuggestUsers(loginSubstring: string, limit: number): Promise<IUserAttributes[]> {
 	return await User.findAll({
 		where: {
 			login: {
