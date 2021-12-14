@@ -1,4 +1,4 @@
-export type Permission = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES';
+import { Permission } from '../models/group.model';
 
 export interface IGroup {
 	id: string;

@@ -1,4 +1,4 @@
-import { BelongsToMany, Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
+import { AllowNull, BelongsToMany, Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { IUserAttributes } from '../types/user';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,10 +13,12 @@ export class User extends Model<User, IUserCreationAttributes> {
 	@Column(DataType.STRING)
 	id = uuidv4();
 
+	@AllowNull(false)
 	@Unique(true)
 	@Column(DataType.STRING)
 	login!: string;
 
+	@AllowNull(false)
 	@Column(DataType.STRING)
 	get password(): string {
 		return this.getDataValue('password');
@@ -26,6 +28,7 @@ export class User extends Model<User, IUserCreationAttributes> {
 		this.setDataValue('password', value);
 	}
 
+	@AllowNull(false)
 	@Column(DataType.INTEGER)
 	age!: number;
 
