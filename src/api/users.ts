@@ -10,7 +10,7 @@ import { baseUserBodySchema, BaseUserSchema } from '../validators/schemas';
 export const router = Router();
 
 router.param('id', async (req: Request, _, next, id) => {
-	console.log('>>>>>> entered user id param');
+	console.log('>>>>>> entered user id param ', id);
 	req.user = (await User.findByPk(id)) ?? undefined;
 
 	next();

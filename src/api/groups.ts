@@ -3,13 +3,13 @@ import { GroupRequest as Request } from '../typings';
 import { Group } from '../models/group.model';
 import { IGroup, IGroupBaseAttributes } from '../types/group';
 
-// TODO: ADD DB VALIDATION FOR PERMISSIONS
+// TODO: ADD REQUEST VALIDATION FOR PERMISSIONS
 
 export const router = Router();
 type IGroupLocals = Record<'group', IGroup>;
 
 router.param('id', async (req: Request, _, next, id) => {
-	console.log('>>>>>> entered group id param');
+	console.log('>>>>>> entered group id param ', id);
 	req.group = (await Group.findByPk(id)) ?? undefined;
 
 	next();
@@ -48,16 +48,30 @@ router
 		}
 	});
 
-router.post('/', async (req: Request<{}, IGroup, IGroupBaseAttributes, {}, {}>, res: Response<IGroup | string>) => {
-	let group: Group | undefined;
-	try {
-		group = await new Group({ name: req.body.name, permissions: req.body.permissions });
-		await group.save();
+router
+	.route('/')
+	.post(async (req: Request<{}, IGroup, IGroupBaseAttributes, {}, {}>, res: Response<IGroup | string>) => {
+		let group: Group | undefined;
+		try {
+			group = await new Group({ name: req.body.name, permissions: req.body.permissions });
+			await group.save();
 
-		res.json(group);
-	} catch (e) {
-		console.log(e);
-		// @ts-ignore
-		res.status(404).send({ error: e });
-	}
-});
+			res.json(group);
+		} catch (e) {
+			console.log(e);
+			// @ts-ignore
+			res.status(404).send({ error: e });
+		}
+	})
+	.get(async (_req: Request<{}, IGroup[], {}, {}, {}>, res: Response) => {
+		let groups: Group[] | [];
+		try {
+			groups = await Group.findAll();
+
+			res.json(groups);
+		} catch (e) {
+			console.log(e);
+			// @ts-ignore
+			res.status(404).send({ error: e });
+		}
+	});

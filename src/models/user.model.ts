@@ -18,7 +18,13 @@ export class User extends Model<User, IUserCreationAttributes> {
 	login!: string;
 
 	@Column(DataType.STRING)
-	password!: string;
+	get password(): string {
+		return this.getDataValue('password');
+	}
+	set password(value) {
+		// TODO: encrypt
+		this.setDataValue('password', value);
+	}
 
 	@Column(DataType.INTEGER)
 	age!: number;

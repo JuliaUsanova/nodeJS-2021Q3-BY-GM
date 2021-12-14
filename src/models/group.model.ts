@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { User } from './user.model';
 import { UserGroup } from './user-group';
 
+// TODO: ADD DB VALIDATION FOR PERMISSIONS
+
 @Table
 export class Group extends Model<IGroup, IGroupBaseAttributes> {
 	@PrimaryKey
