@@ -62,7 +62,14 @@ router.get(
 		res: Response<IUserAttributes[]>
 	) => {
 		const { limit, loginSubstring } = req.query;
-		res.json(await getAutoSuggestUsers(loginSubstring, limit));
+		try {
+			const result = await getAutoSuggestUsers(loginSubstring.toLowerCase(), limit);
+			res.json(result);
+		} catch (e) {
+			console.log(e);
+			// @ts-ignore
+			res.status(404).send({ error: e });
+		}
 	}
 );
 
@@ -83,10 +90,11 @@ async function getAutoSuggestUsers(loginSubstring: string, limit: number): Promi
 	return await User.findAll({
 		where: {
 			login: {
-				[Op.substring]: loginSubstring
+				[Op.iLike]: `%${loginSubstring}%`
 			}
 		},
-		order: ['login', 'DESC'],
+		order: [['login', 'DESC']],
+		attributes: ['id', 'login', 'age', 'isDeleted'],
 		limit
 	});
 }

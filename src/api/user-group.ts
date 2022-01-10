@@ -17,7 +17,7 @@ router.post('/:id', async (req: Request<{}, string, {}, { userIds: string[] }, {
 	const { userIds } = req.query;
 	try {
 		await addUsersToGroup(req.group!, userIds);
-		res.status(200);
+		res.status(200).send();
 	} catch (e) {
 		// @ts-ignore
 		res.status(404).send({ error: e });
@@ -30,9 +30,8 @@ async function addUsersToGroup(group: Group, userIds: string[]) {
 			id: userIds
 		}
 	});
-	await group.$add('users', users);
+	await group.$add('user', users);
 	for (let i = 0; i < users.length; i++) {
-		await users[i].$add('groups', group);
+		await users[i].$add('group', group);
 	}
-	return true;
 }
