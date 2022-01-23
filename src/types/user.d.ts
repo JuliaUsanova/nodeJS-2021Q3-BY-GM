@@ -4,7 +4,7 @@ export type BaseUserAttributes = {
 	age: number;
 };
 
-export interface UserAttributes {
+export interface IUserAttributes {
 	id: string;
 	login: string;
 	password: string;

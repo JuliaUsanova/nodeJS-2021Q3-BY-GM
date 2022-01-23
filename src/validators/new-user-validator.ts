@@ -1,4 +1,4 @@
-import { Request } from '../typings';
+import { UserRequest as Request } from '../typings';
 import { NextFunction, Response } from 'express';
 import { asyncUserBodySchema } from './schemas';
 import { User } from '../models/user.model';

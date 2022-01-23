@@ -2,6 +2,8 @@ import { config } from '../config';
 import { Sequelize } from 'sequelize-typescript';
 import { User } from '../models/user.model';
 import dbDriver from '../services/db-driver.service';
+import { Group } from '../models/group.model';
+import { UserGroup } from '../models/user-group';
 
 export const sequelize = new Sequelize({
 	database: config.db.name,
@@ -10,7 +12,7 @@ export const sequelize = new Sequelize({
 	host: config.db.host,
 	dialect: 'postgres',
 	port: config.db.port,
-	models: [User]
+	models: [User, Group, UserGroup]
 });
 
 export default async () => {
@@ -19,6 +21,8 @@ export default async () => {
 		console.log('Connection to DB has been established successfully.');
 		dbDriver.setInstance(sequelize);
 		await User.sync({ force: true });
+		await Group.sync({ force: true });
+		await UserGroup.sync({ force: true });
 	} catch (error) {
 		console.error('Unable to connect to the database:', error);
 		return null;

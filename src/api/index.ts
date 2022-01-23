@@ -1,3 +1,3 @@
-import { router } from './users';
-
-export const usersRouter = router;
+export { router as usersRouter } from './users';
+export { router as groupsRouter } from './groups';
+export { router as userGroupRouter } from './user-group';
