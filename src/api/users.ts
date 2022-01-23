@@ -66,7 +66,6 @@ router.get(
 			const result = await getAutoSuggestUsers(loginSubstring.toLowerCase(), limit);
 			res.json(result);
 		} catch (e) {
-			console.log(e);
 			// @ts-ignore
 			res.status(404).send({ error: e });
 		}
@@ -80,7 +79,6 @@ router.post('/', newUserValidator, async (req: ValidatedRequest<BaseUserSchema>,
 
 		res.json(user);
 	} catch (e) {
-		console.log(e);
 		// @ts-ignore
 		res.status(404).send({ error: e });
 	}

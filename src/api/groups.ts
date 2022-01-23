@@ -60,7 +60,6 @@ router
 
 			res.json(group);
 		} catch (e) {
-			console.log(e);
 			// @ts-ignore
 			res.status(404).send({ error: e });
 		}
@@ -72,7 +71,6 @@ router
 
 			res.json(groups);
 		} catch (e) {
-			console.log(e);
 			// @ts-ignore
 			res.status(404).send({ error: e });
 		}
