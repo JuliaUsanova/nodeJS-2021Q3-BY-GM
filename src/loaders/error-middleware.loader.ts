@@ -1,8 +1,8 @@
-import express, { NextFunction, Request, Response } from 'express';
+import { Application, NextFunction, Request, Response } from 'express';
 import { ExpressJoiError } from 'express-joi-validation';
 import dbDriver from '../services/db-driver.service';
 
-export default async ({ app }: { app: express.Application }) => {
+export default ({ app }: { app: Application }) => {
 	app.use(
 		(err: Error | ExpressJoiError, _: Request, res: Response, next: NextFunction) => {
 			console.log(err);
@@ -16,9 +16,9 @@ export default async ({ app }: { app: express.Application }) => {
 				next(err);
 			}
 		},
-		(err: Error, _: Request, res: Response) => {
+		async (err: Error, _: Request, res: Response) => {
 			console.error(err.stack);
-			dbDriver.close();
+			await dbDriver.close();
 			res.status(500).send('Something went wrong!');
 		}
 	);
