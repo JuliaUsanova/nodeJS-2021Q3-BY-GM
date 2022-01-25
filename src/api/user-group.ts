@@ -5,6 +5,7 @@ import { Group } from '../models/group.model';
 import * as winston from 'winston';
 import { transports } from 'winston';
 import { UserGroup } from '../models/user-group';
+import { checkToken } from './login';
 
 export const router = Router();
 
@@ -24,6 +25,7 @@ router.param('id', async (req: Request, _, next, id) => {
 
 router.post(
 	'/:id',
+	checkToken,
 	async (req: Request<{}, string, {}, { userIds: string[] }, {}>, res: Response<IGroup | string>, next) => {
 		const { userIds } = req.query;
 		try {

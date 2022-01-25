@@ -1,5 +1,5 @@
-import { Response, Router } from 'express';
-import { GroupRequest as Request } from '../typings';
+import { NextFunction, Response, Router } from 'express';
+import { GroupRequest, GroupRequest as Request, UserRequest } from '../typings';
 import { User } from '../models/user.model';
 import * as fs from 'fs';
 
@@ -26,3 +26,19 @@ router
 
 		return res.send(token);
 	});
+
+export function checkToken(req: GroupRequest | UserRequest, res: Response, next: NextFunction) {
+	const token = req.headers['x-access-token'];
+	if (!token) {
+		return res.status(401).send('No token provided');
+	}
+	const secret = fs.readFileSync('./secret.txt');
+	return jwt.verify(token, secret, (err: Error, _decoded: { sub: string; exp: string }) => {
+		debugger;
+		if (err) {
+			return res.status(401).send('Failed to authenticate token');
+		}
+
+		return next();
+	});
+}

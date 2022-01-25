@@ -4,6 +4,7 @@ import { Group } from '../models/group.model';
 import { IGroup, IGroupBaseAttributes } from '../types/group';
 import * as winston from 'winston';
 import { transports } from 'winston';
+import { checkToken } from './login';
 
 // TODO: ADD REQUEST VALIDATION FOR PERMISSIONS
 
@@ -26,19 +27,23 @@ router.param('id', async (req: Request, _, next, id) => {
 
 router
 	.route('/:id')
-	.get(async ({ group, params }: Request<{ id: string }, IGroup, {}, {}, IGroupLocals>, res: Response, next) => {
-		try {
-			if (group) {
-				const users = await group.getUsers();
-				res.json({ group, users });
-			} else {
-				res.status(404).json({ message: `Group with id ${params.id} is not found` });
+	.get(
+		checkToken,
+		async ({ group, params }: Request<{ id: string }, IGroup, {}, {}, IGroupLocals>, res: Response, next) => {
+			try {
+				if (group) {
+					const users = await group.getUsers();
+					res.json({ group, users });
+				} else {
+					res.status(404).json({ message: `Group with id ${params.id} is not found` });
+				}
+			} catch (e) {
+				next(e);
 			}
-		} catch (e) {
-			next(e);
 		}
-	})
+	)
 	.put(
+		checkToken,
 		async (
 			{ group, body, params }: Request<{ id: string }, IGroup, IGroupBaseAttributes, {}, IGroupLocals>,
 			res,
@@ -60,7 +65,7 @@ router
 			}
 		}
 	)
-	.delete(async ({ group, params }: Request<{ id: string }, {}, {}, {}, IGroupLocals>, res, next) => {
+	.delete(checkToken, async ({ group, params }: Request<{ id: string }, {}, {}, {}, IGroupLocals>, res, next) => {
 		try {
 			if (group) {
 				await group.destroy();
@@ -75,20 +80,23 @@ router
 
 router
 	.route('/')
-	.post(async ({ body }: Request<{}, IGroup, IGroupBaseAttributes, {}, {}>, res: Response<IGroup | string>, next) => {
-		let group: Group | undefined;
-		try {
-			group = await new Group({ name: body.name, permissions: body.permissions });
-			await group.save();
+	.post(
+		checkToken,
+		async ({ body }: Request<{}, IGroup, IGroupBaseAttributes, {}, {}>, res: Response<IGroup | string>, next) => {
+			let group: Group | undefined;
+			try {
+				group = await new Group({ name: body.name, permissions: body.permissions });
+				await group.save();
 
-			res.json(group);
-		} catch (e) {
-			next(e);
-			// @ts-ignore
-			res.status(404).send({ error: e });
+				res.json(group);
+			} catch (e) {
+				next(e);
+				// @ts-ignore
+				res.status(404).send({ error: e });
+			}
 		}
-	})
-	.get(async (_req: Request<{}, IGroup[], {}, {}, {}>, res: Response, next) => {
+	)
+	.get(checkToken, async (_req: Request<{}, IGroup[], {}, {}, {}>, res: Response, next) => {
 		let groups: Group[] | [];
 		try {
 			groups = await Group.findAll();

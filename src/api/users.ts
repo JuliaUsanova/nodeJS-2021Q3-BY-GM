@@ -7,6 +7,8 @@ import { newUserValidator, userValidator } from '../validators';
 import { baseUserBodySchema, BaseUserSchema } from '../validators/schemas';
 import * as winston from 'winston';
 import { transports } from 'winston';
+import { checkToken } from './login';
+import { ParsedQs } from 'qs';
 
 export const router = Router();
 
@@ -92,15 +94,23 @@ router
 
 router.get(
 	'/',
+	checkToken,
 	async (
-		req: Request<{}, IUserAttributes[], BaseUserAttributes[], { loginSubstring: string; limit: number }>,
-		res: Response<IUserAttributes[]>,
+		req: Request<{}, IUserAttributes[], BaseUserAttributes[], ParsedQs>,
+		res: Response<IUserAttributes[] | string>,
 		next
 	) => {
 		const { limit, loginSubstring } = req.query;
 		try {
-			const result = await User.getAutoSuggestUsers(loginSubstring.toLowerCase(), limit);
-			res.json(result);
+			if (limit && loginSubstring) {
+				const result = await User.getAutoSuggestUsers(
+					loginSubstring.toString().toLowerCase(),
+					parseInt(limit.toString())
+				);
+				res.json(result);
+			} else {
+				res.status(401).send(`Provide valid string value for "loginSubstring" and number for "limit"`);
+			}
 		} catch (e) {
 			next(e);
 			// @ts-ignore
