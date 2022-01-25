@@ -48,7 +48,11 @@ router
 	.put(
 		userValidator.body(baseUserBodySchema),
 		async (
-			{ user, body, params }: Request<{ id: string }, IUserAttributes, BaseUserAttributes, {}, Record<string, BaseUserAttributes>>,
+			{
+				user,
+				body,
+				params
+			}: Request<{ id: string }, IUserAttributes, BaseUserAttributes, {}, Record<string, BaseUserAttributes>>,
 			res,
 			next
 		) => {
@@ -68,18 +72,24 @@ router
 			}
 		}
 	)
-	.delete(async ({ user, params }: Request<{ id: string }, {}, {}, {}, Record<string, BaseUserAttributes>>, res, next) => {
-		try {
-			if (user) {
-				await user.destroy();
-				res.status(200).send();
-			} else {
-				res.status(404).json({ message: `User with id ${params.id} is not found` });
+	.delete(
+		async (
+			{ user, params }: Request<{ id: string }, {}, {}, {}, Record<string, BaseUserAttributes>>,
+			res,
+			next
+		) => {
+			try {
+				if (user) {
+					await user.destroy();
+					res.status(200).send();
+				} else {
+					res.status(404).json({ message: `User with id ${params.id} is not found` });
+				}
+			} catch (e) {
+				next(e);
 			}
-		} catch (e) {
-			next(e);
 		}
-	});
+	);
 
 router.get(
 	'/',
