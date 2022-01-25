@@ -30,15 +30,15 @@ router
 	.route('/:id')
 	.get(
 		(
-			req: Request<{ id: string }, IUserAttributes, {}, {}, Record<string, BaseUserAttributes>>,
+			{ user, params }: Request<{ id: string }, IUserAttributes, {}, {}, Record<string, BaseUserAttributes>>,
 			res: Response,
 			next
 		) => {
 			try {
-				if (req.user) {
-					res.json(req.user);
+				if (user) {
+					res.json(user);
 				} else {
-					res.status(404).json({ message: `User with id ${req.params.id} is not found` });
+					res.status(404).json({ message: `User with id ${params.id} is not found` });
 				}
 			} catch (e) {
 				next(e);
@@ -48,36 +48,33 @@ router
 	.put(
 		userValidator.body(baseUserBodySchema),
 		async (
-			req: Request<{ id: string }, IUserAttributes, BaseUserAttributes, {}, Record<string, BaseUserAttributes>>,
+			{ user, body, params }: Request<{ id: string }, IUserAttributes, BaseUserAttributes, {}, Record<string, BaseUserAttributes>>,
 			res,
 			next
 		) => {
 			try {
-				if (req.user) {
-					const user = req.user;
-					const { login, password, age } = req.body;
+				if (user) {
+					const { login, password, age } = body;
 
 					user.updateDetails(login, password, age);
 					await user.save();
 
 					res.status(200).json(user);
 				} else {
-					res.status(404).json({ message: `User with id ${req.params.id} is not found` });
+					res.status(404).json({ message: `User with id ${params.id} is not found` });
 				}
 			} catch (e) {
 				next(e);
 			}
 		}
 	)
-	.delete(async (req: Request<{ id: string }, {}, {}, {}, Record<string, BaseUserAttributes>>, res, next) => {
+	.delete(async ({ user, params }: Request<{ id: string }, {}, {}, {}, Record<string, BaseUserAttributes>>, res, next) => {
 		try {
-			if (req.user) {
-				const user = req.user;
-
+			if (user) {
 				await user.destroy();
 				res.status(200).send();
 			} else {
-				res.status(404).json({ message: `User with id ${req.params.id} is not found` });
+				res.status(404).json({ message: `User with id ${params.id} is not found` });
 			}
 		} catch (e) {
 			next(e);
