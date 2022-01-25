@@ -29,7 +29,7 @@ router
 	.get(async ({ group, params }: Request<{ id: string }, IGroup, {}, {}, IGroupLocals>, res: Response, next) => {
 		try {
 			if (group) {
-				const users = await group.$get('users');
+				const users = await group.getUsers();
 				res.json({ group, users });
 			} else {
 				res.status(404).json({ message: `Group with id ${params.id} is not found` });

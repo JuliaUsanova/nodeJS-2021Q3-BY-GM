@@ -3,7 +3,6 @@ import { Response, Router } from 'express';
 import { UserRequest as Request } from '../typings';
 import { ValidatedRequest } from 'express-joi-validation';
 import { BaseUserAttributes, IUserAttributes } from '../types/user';
-import { Op } from 'sequelize';
 import { newUserValidator, userValidator } from '../validators';
 import { baseUserBodySchema, BaseUserSchema } from '../validators/schemas';
 import * as winston from 'winston';
@@ -100,7 +99,7 @@ router.get(
 	) => {
 		const { limit, loginSubstring } = req.query;
 		try {
-			const result = await getAutoSuggestUsers(loginSubstring.toLowerCase(), limit);
+			const result = await User.getAutoSuggestUsers(loginSubstring.toLowerCase(), limit);
 			res.json(result);
 		} catch (e) {
 			next(e);
@@ -125,16 +124,3 @@ router.post(
 		}
 	}
 );
-
-async function getAutoSuggestUsers(loginSubstring: string, limit: number): Promise<IUserAttributes[]> {
-	return await User.findAll({
-		where: {
-			login: {
-				[Op.iLike]: `%${loginSubstring}%`
-			}
-		},
-		order: [['login', 'DESC']],
-		attributes: ['id', 'login', 'age', 'isDeleted'],
-		limit
-	});
-}

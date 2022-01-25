@@ -2,9 +2,9 @@ import { GroupRequest as Request } from '../typings';
 import { Response, Router } from 'express';
 import { IGroup } from '../types/group';
 import { Group } from '../models/group.model';
-import { User } from '../models/user.model';
 import * as winston from 'winston';
 import { transports } from 'winston';
+import { UserGroup } from '../models/user-group';
 
 export const router = Router();
 
@@ -27,7 +27,7 @@ router.post(
 	async (req: Request<{}, string, {}, { userIds: string[] }, {}>, res: Response<IGroup | string>, next) => {
 		const { userIds } = req.query;
 		try {
-			await addUsersToGroup(req.group!, userIds);
+			await UserGroup.addUsersToGroup(req.group!, userIds);
 			res.status(200).send();
 		} catch (e) {
 			next(e);
@@ -36,15 +36,3 @@ router.post(
 		}
 	}
 );
-
-async function addUsersToGroup(group: Group, userIds: string[]) {
-	const users = await User.findAll({
-		where: {
-			id: userIds
-		}
-	});
-	await group.$add('user', users);
-	for (let i = 0; i < users.length; i++) {
-		await users[i].$add('group', group);
-	}
-}

@@ -52,4 +52,8 @@ export class Group extends Model<IGroup, IGroupBaseAttributes> {
 		this.name = name ?? this.name;
 		this.permissions = permissions && permissions.length ? permissions : this.permissions;
 	}
+
+	async getUsers() {
+		return await this.$get('users');
+	}
 }
