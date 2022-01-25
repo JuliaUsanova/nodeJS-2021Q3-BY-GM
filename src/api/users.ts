@@ -112,10 +112,10 @@ router.get(
 router.post(
 	'/',
 	newUserValidator,
-	async (req: ValidatedRequest<BaseUserSchema>, res: Response<User | string>, next) => {
+	async ({ body }: ValidatedRequest<BaseUserSchema>, res: Response<User | string>, next) => {
 		let user: User | undefined;
 		try {
-			user = await User.create({ login: req.body.login, password: req.body.password, age: req.body.age });
+			user = await User.create({ login: body.login, password: body.password, age: body.age });
 			res.json(user);
 		} catch (e) {
 			next(e);

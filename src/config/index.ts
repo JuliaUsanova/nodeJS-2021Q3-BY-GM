@@ -24,6 +24,7 @@ export const config = {
 	 */
 	api: {
 		usersPrefix: '/users',
-		groupsPrefix: '/groups'
+		groupsPrefix: '/groups',
+		loginPrefix: '/login'
 	}
 };
