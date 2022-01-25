@@ -34,9 +34,8 @@ export function checkToken(req: GroupRequest | UserRequest, res: Response, next:
 	}
 	const secret = fs.readFileSync('./secret.txt');
 	return jwt.verify(token, secret, (err: Error, _decoded: { sub: string; exp: string }) => {
-		debugger;
 		if (err) {
-			return res.status(401).send('Failed to authenticate token');
+			return res.status(403).send('Failed to authenticate token');
 		}
 
 		return next();
