@@ -3,6 +3,9 @@ import expressRouterLoader from './express-router.loader';
 import errorMiddlewareLoader from './error-middleware.loader';
 import loggerMiddlewareLoader from './logger-middleware.loader';
 import sequelizeLoader from './sequelize.loader';
+import { Server } from 'http';
+
+let server: Server;
 
 export async function startServer(PORT: number) {
 	const app = express();
@@ -12,7 +15,11 @@ export async function startServer(PORT: number) {
 	errorMiddlewareLoader({ app });
 	await sequelizeLoader();
 
-	app.listen(PORT, () => {
+	server = app.listen(PORT, () => {
 		console.log(`Running on port ${PORT}`);
 	});
+}
+
+export function closeServer() {
+	server.close();
 }

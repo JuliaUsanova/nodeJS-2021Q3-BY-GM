@@ -1,8 +1,8 @@
 import { Application, NextFunction, Request, Response } from 'express';
 import { ExpressJoiError } from 'express-joi-validation';
-import dbDriver from '../services/db-driver.service';
 import * as winston from 'winston';
 import { transports } from 'winston';
+import { eventEmitter } from '../services/event-emitter';
 
 const logger = winston.createLogger({
 	transports: [new transports.Console()],
@@ -27,8 +27,9 @@ export default ({ app }: { app: Application }) => {
 		},
 		async (err: Error, req: Request, res: Response) => {
 			logger.error('Unhandled error ', req.path, req.params, err.stack);
-			await dbDriver.close();
 			res.status(500).json('Internal Server Error');
+
+			eventEmitter.emit('close');
 		}
 	);
 
