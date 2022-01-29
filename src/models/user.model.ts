@@ -1,5 +1,5 @@
 import { AllowNull, BelongsToMany, Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
-import { Optional } from 'sequelize';
+import { Op, Optional } from 'sequelize';
 import { IUserAttributes } from '../types/user';
 import { v4 as uuidv4 } from 'uuid';
 import { Group } from './group.model';
@@ -9,6 +9,19 @@ interface IUserCreationAttributes extends Optional<IUserAttributes, 'id' | 'isDe
 
 @Table
 export class User extends Model<User, IUserCreationAttributes> {
+	static async getAutoSuggestUsers(loginSubstring: string, limit: number): Promise<IUserAttributes[]> {
+		return await User.findAll({
+			where: {
+				login: {
+					[Op.iLike]: `%${loginSubstring}%`
+				}
+			},
+			order: [['login', 'DESC']],
+			attributes: ['id', 'login', 'age', 'isDeleted'],
+			limit
+		});
+	}
+
 	@PrimaryKey
 	@Column(DataType.STRING)
 	id = uuidv4();
