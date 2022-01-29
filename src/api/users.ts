@@ -16,11 +16,14 @@ const logger = winston.createLogger({
 	transports: [new transports.Console()]
 });
 
-router.param('id', async (req: Request, _, next, id) => {
+router.param('id', async (req: Request, res, next, id) => {
 	logger.info('Trying to fetch user by id ', id);
 
 	try {
 		req.user = (await User.findByPk(id)) ?? undefined;
+		if (!req.user) {
+			return res.status(404).json({ message: `User with id ${id} is not found` });
+		}
 		next();
 	} catch (e) {
 		next(e);
@@ -31,16 +34,12 @@ router
 	.route('/:id')
 	.get(
 		(
-			{ user, params }: Request<{ id: string }, IUserAttributes, {}, {}, Record<string, BaseUserAttributes>>,
+			{ user }: Request<{ id: string }, IUserAttributes, {}, {}, Record<string, BaseUserAttributes>>,
 			res: Response,
 			next
 		) => {
 			try {
-				if (user) {
-					res.json(user);
-				} else {
-					res.status(404).json({ message: `User with id ${params.id} is not found` });
-				}
+				res.json(user);
 			} catch (e) {
 				next(e);
 			}
@@ -51,46 +50,31 @@ router
 		async (
 			{
 				user,
-				body,
-				params
+				body
 			}: Request<{ id: string }, IUserAttributes, BaseUserAttributes, {}, Record<string, BaseUserAttributes>>,
 			res,
 			next
 		) => {
 			try {
-				if (user) {
-					const { login, password, age } = body;
+				const { login, password, age } = body;
 
-					user.updateDetails(login, password, age);
-					await user.save();
+				user!.updateDetails(login, password, age);
+				await user!.save();
 
-					res.status(200).json(user);
-				} else {
-					res.status(404).json({ message: `User with id ${params.id} is not found` });
-				}
+				res.status(200).json(user);
 			} catch (e) {
 				next(e);
 			}
 		}
 	)
-	.delete(
-		async (
-			{ user, params }: Request<{ id: string }, {}, {}, {}, Record<string, BaseUserAttributes>>,
-			res,
-			next
-		) => {
-			try {
-				if (user) {
-					await user.destroy();
-					res.status(200).send();
-				} else {
-					res.status(404).json({ message: `User with id ${params.id} is not found` });
-				}
-			} catch (e) {
-				next(e);
-			}
+	.delete(async ({ user }: Request<{ id: string }, {}, {}, {}, Record<string, BaseUserAttributes>>, res, next) => {
+		try {
+			await user!.destroy();
+			res.status(200).send();
+		} catch (e) {
+			next(e);
 		}
-	);
+	});
 
 router.get(
 	'/',
