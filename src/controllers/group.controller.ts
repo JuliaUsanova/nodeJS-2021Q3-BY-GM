@@ -29,55 +29,43 @@ export const getGroupById = async (
 };
 
 export const readGroup = async (
-	{ group, params }: Request<{ id: string }, IGroup, {}, {}, IGroupLocals>,
+	{ group }: Request<{ id: string }, IGroup, {}, {}, IGroupLocals>,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		if (group) {
-			const users = await group.getUsers();
-			res.json({ group, users });
-		} else {
-			res.status(404).json({ message: `Group with id ${params.id} is not found` });
-		}
+		const users = await group.getUsers();
+		res.json({ group, users });
 	} catch (e) {
 		next(e);
 	}
 };
 
 export const updateGroup = async (
-	{ group, body, params }: Request<{ id: string }, IGroup, IGroupBaseAttributes, {}, IGroupLocals>,
+	{ group, body }: Request<{ id: string }, IGroup, IGroupBaseAttributes, {}, IGroupLocals>,
 	res: Response<Group | Record<string, string>>,
 	next: NextFunction
 ) => {
 	try {
-		if (group) {
-			const { name, permissions } = body;
+		const { name, permissions } = body;
 
-			group.updateDetails(name, permissions);
-			await group.save();
+		group.updateDetails(name, permissions);
+		await group.save();
 
-			res.status(200).json(group);
-		} else {
-			res.status(404).json({ message: `Group with id ${params.id} is not found` });
-		}
+		res.status(200).json(group);
 	} catch (e) {
 		next(e);
 	}
 };
 
 export const deleteGroup = async (
-	{ group, params }: Request<{ id: string }, {}, {}, {}, IGroupLocals>,
+	{ group }: Request<{ id: string }, {}, {}, {}, IGroupLocals>,
 	res: Response<number | Record<string, string>>,
 	next: NextFunction
 ) => {
 	try {
-		if (group) {
-			await group.destroy();
-			res.status(200).send();
-		} else {
-			res.status(404).json({ message: `Group with id ${params.id} is not found` });
-		}
+		await group.destroy();
+		res.status(200).send();
 	} catch (e) {
 		next(e);
 	}

@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc",
     "serve": "nodemon src/app/index.ts",
-    "generate": "nodemon src/jobs/generate-test-data.ts"
+    "generate": "nodemon src/jobs/generate-test-data.ts",
+    "test": "npx jest"
   },
   "repository": {
     "type": "git",
