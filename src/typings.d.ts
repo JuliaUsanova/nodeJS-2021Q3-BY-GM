@@ -19,5 +19,5 @@ export interface GroupRequest<
 	ReqQuery = core.Query,
 	Locals extends Record<string, any> = Record<string, any>
 > extends core.Request<P, ResBody, ReqBody, ReqQuery, Locals> {
-	group?: Group;
+	group: Group;
 }

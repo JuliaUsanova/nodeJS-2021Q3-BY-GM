@@ -7,3 +7,5 @@ export interface IGroup {
 }
 
 export type IGroupBaseAttributes = Omit<IGroup, 'id'>;
+
+export type IGroupLocals = Record<'group', IGroup>;
